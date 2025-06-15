@@ -1,7 +1,7 @@
 <template>
-  <v-container class="mt-2">
+  <v-container class="mt-2" fluid>
     <v-row align="center" justify="center">
-      <v-col cols="12" md="6" class="text-center">
+      <v-col cols="12" sm="10" md="6" class="text-center">
 
         <!-- Search Input -->
         <v-text-field
@@ -13,7 +13,8 @@
           class="mb-4"
         ></v-text-field>
 
-        <div class="image-wrapper mx-auto">
+        <!-- Image -->
+        <div class="image-wrapper" @click="goToGallery(filteredImage?.name)">
           <v-img
             :src="filteredImage?.image"
             class="rounded-img"
@@ -21,7 +22,8 @@
           ></v-img>
         </div>
 
-        <div class="image-title mt-2">
+        <!-- Title -->
+        <div class="image-title mt-2" @click="goToGallery(filteredImage?.name)">
           {{ filteredImage?.name || 'No image found' }}
         </div>
 
@@ -34,12 +36,14 @@
             <v-icon>mdi-chevron-right</v-icon>
           </v-btn>
         </div>
+
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import pera1 from '@/assets/pera1.jpg';
 export default {
   name: 'ZhaPhotography',
   data() {
@@ -47,26 +51,14 @@ export default {
       currentIndex: 0,
       searchTerm: '',
       trending: [
-        { name: "Dairy Milk Silk", image: "https://cdn.pixabay.com/photo/2024/06/22/16/24/ai-generated-8846622_1280.jpg" },
-        { name: "Dark Fantasy", image: "https://cdn.pixabay.com/photo/2023/11/10/02/30/woman-8378634_1280.jpg" },
-        { name: "Jelly", image: "https://cdn.pixabay.com/photo/2021/08/16/19/24/boat-6551183_1280.jpg" },
-        { name: "Mango Bite", image: "https://cdn.pixabay.com/photo/2024/05/11/13/41/portrait-8754981_1280.png" },
-        { name: "Milky Bar", image: "https://cdn.pixabay.com/photo/2022/03/24/15/46/woman-7089304_1280.jpg" },
-        { name: "Rasagulla", image: "https://cdn.pixabay.com/photo/2022/10/21/09/01/fashion-7536574_1280.jpg" },
-        { name: "Kit Kat", image: "https://cdn.pixabay.com/photo/2024/05/11/13/32/portrait-8754958_1280.jpg" },
-        { name: "Paalkova", image: "https://cdn.pixabay.com/photo/2022/10/21/09/01/fashion-7536575_1280.jpg" },
-        { name: "Panju Mittai", image: "https://cdn.pixabay.com/photo/2016/11/29/02/28/woman-1866858_1280.jpg" },
-        { name: "Eclairs", image: "https://cdn.pixabay.com/photo/2021/04/03/02/21/fashion-6146328_1280.jpg" },
-      ],
+        { name: "Perarulalan", image: pera1 },
+      ]
     };
   },
   computed: {
     filteredImage() {
       if (!this.searchTerm) return this.trending[this.currentIndex];
-      const match = this.trending.find(item =>
-        item.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-      );
-      return match || null;
+      return this.trending.find(item => item.name.toLowerCase().includes(this.searchTerm.toLowerCase())) || null;
     },
   },
   methods: {
@@ -77,12 +69,11 @@ export default {
       this.currentIndex = (this.currentIndex - 1 + this.trending.length) % this.trending.length;
     },
     handleSearch() {
-      const index = this.trending.findIndex(item =>
-        item.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-      );
-      if (index !== -1) {
-        this.currentIndex = index;
-      }
+      const index = this.trending.findIndex(item => item.name.toLowerCase().includes(this.searchTerm.toLowerCase()));
+      if (index !== -1) this.currentIndex = index;
+    },
+    goToGallery(name) {
+      if (name) this.$router.push({ name: 'GalleryView', params: { name } });
     }
   }
 };
@@ -96,11 +87,13 @@ export default {
 }
 
 .image-wrapper {
-  width: 400px;
-  height: 400px;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   overflow: hidden;
 }
 
